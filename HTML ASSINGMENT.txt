@@ -1,0 +1,196 @@
+
+<!DOCTYPE html>
+<head>
+    <title>FULLSTACK_QUIZ</title>
+    <link rel="stylesheet" href="style1.css">
+</head>
+
+<body>
+    <div class="app">
+        <h1>JAVASCRIPT QUIZ</h1>
+        <div class="quiz">
+            <h2 id="question">START OUR SESSION</h2>
+            <hr>
+            <div id="answer-buttons">
+                <button class="btn">ANSWER 1</button>
+                <button class="btn">ANSWER 2</button>
+                <button class="btn">ANSWER 3</button>
+                <button class="btn">ANSWER 4</button>
+            </div>
+            <div>
+                <button id="next-btn">Next</button>
+            </div>
+        </div>
+    </div>
+    <script src="assingment.js"></script>
+</body
+
+
+
+body {
+    background-color: rgb(0, 0, 0);
+}
+
+.app {
+    background-color: rgb(31, 13, 229);
+    color: rgb(144, 247, 0);
+    width: 90%;
+    margin: 100px auto 0;
+    text-align: center;
+    padding: 20px;
+}
+
+.quiz {
+    text-align: left;
+}
+
+.btn {
+    width: 10%;
+    border-radius: 7px;
+    margin: 50px auto 0;
+    padding: 30px;
+}
+
+.btn:hover {
+    background-color: rgb(16, 224, 196);
+    cursor: pointer;
+    ;
+}
+
+#next-btn {
+    padding: 50px;
+    margin: 50px auto 0;
+    align-content: right;
+    display: none;
+}
+
+#next-btn:hover {
+    background-color: rgb(131, 81, 21);
+    cursor: pointer;
+    ;
+}
+
+.correct {
+    background-color: rgba(227, 218, 42, 0.676);
+}
+
+.incorrect {
+    background-color: rgb(190, 42, 42);
+}
+
+
+
+
+
+const questions = [
+    {
+        question: "which is largest country in the world",
+        answer: [
+            { text: "India", correct: false },
+            { text: "China", correct: false },
+            { text: "Russia", correct: true },
+            { text: "America", correct: false },
+        ]
+    },
+    {
+        question: "Which state is no 1 in education in India",
+        answer: [
+            { text: "Tamilnadu", correct: false },
+            { text: "Kerala", correct: true },
+            { text: "Karnataka", correct: false },
+            { text: "Bihar", correct: false },
+        ]
+    },
+    {
+        question: "How many states in india",
+        answer: [
+            { text: "22", correct: false },
+            { text: "28", correct: true },
+            { text: "32", correct: false },
+            { text: "27", correct: false },
+        ]
+    },
+    {
+        question: "How many countries in the world",
+        answer: [
+            { text: "195", correct: true },
+            { text: "220", correct: false },
+            { text: "185", correct: false },
+            { text: "350", correct: false },
+        ]
+    },
+];
+const questionElement = document.getElementById("question");
+const answerButtons = document.getElementById("answer-buttons");
+const nextButton = document.getElementById("next-btn");
+let currentQuestionIndex = 0;
+let score = 0;
+function startQuiz() {
+
+    currentQuestionIndex = 0;
+    score = 0;
+    nextButton.innerHTML = "Next";
+    showQuestion();
+}
+function showQuestion() {
+    resetState();
+    let currentQuestion = questions[currentQuestionIndex];
+    let questionNo = currentQuestionIndex + 1;
+    questionElement.innerHTML = questionNo + "." + currentQuestion.question;
+
+    currentQuestion.answer.forEach(answer => {
+        const button = document.createElement("button");
+        button.innerHTML = answer.text;
+        button.classList.add("btn");
+        answerButtons.appendChild(button);
+        if (answer.correct) {
+            button.dataset.correct = answer.correct;
+        }
+        button.addEventListener("click", selectAnswer);
+    });
+}
+function resetState() {
+    nextButton.style.display = "none";
+    while (answerButtons.firstChild) {
+        answerButtons.removeChild(answerButtons.firstChild);
+    }
+}
+
+function selectAnswer(e) {
+    const selectedBtn = e.target;
+    const isCorrect = selectedBtn.dataset.correct === "true";
+    if (isCorrect) {
+        selectedBtn.classList.add("correct");
+        score++;
+    }
+    else {
+        selectedBtn.classList.add("incorrect");
+    }
+    nextButton.style.display = "block";
+}
+
+function showScore() {
+    resetState();
+    questionElement.innerHTML = `You scored ${score} out of ${questions.length}! `;
+    nextButton.innerHTML = "Play Again";
+    nextButton.style.display = "block";
+}
+function handleNextButton() {
+    currentQuestionIndex++;
+    if (currentQuestionIndex < questions.length) {
+        showQuestion();
+    }
+    else {
+        showScore();
+    }
+}
+nextButton.addEventListener("click", () => {
+    if (currentQuestionIndex < questions.length) {
+        handleNextButton();
+    }
+    else {
+        startQuiz();
+    }
+});
+startQuiz();
+
